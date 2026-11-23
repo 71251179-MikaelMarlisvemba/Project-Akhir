@@ -1,8 +1,11 @@
+# app.py
 import streamlit as st 
-from users import pengguna
+from db import cek_login
+from register import halaman_register  # Import tampilan register dari register.py
 
 def main():
-    st.set_page_config(page_title = "Manhwaverse - Login")
+    st.set_page_config(page_title="Manhwaverse - Login")
+    # Sembunyikan sidebar secara total di halaman login
     st.markdown("""
         <style>
             [data-testid="stSidebar"] {
@@ -10,14 +13,36 @@ def main():
             }
         </style>
     """, unsafe_allow_html=True)
+    # 1. Inisialisasi data pengguna dari users.py menggunakan .copy()
+    if 'halaman' not in st.session_state:
+        st.session_state.halaman = "login"
     if 'logged_in' not in st.session_state:
         st.session_state.logged_in = False
     if 'username' not in st.session_state:
-        st.session_state.usernae = False
+        st.session_state.username = None
+    if 'id_user' not in st.session_state:
+        st.session_state.id_user = None
 
+    # Sembunyikan sidebar di halaman Login / Register
     st.markdown("""
         <style>
-        /* Tombol LOGIN oval abu-abu */
+            [data-testid="stSidebar"] {
+                display: none;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
+    # 3. Logika perpindahan halaman
+    if st.session_state.halaman == "register":
+        halaman_register()
+    else:
+        tampilkan_halaman_login()
+
+
+def tampilkan_halaman_login():
+    # Styling tombol oval abu-abu dan link create account
+    st.markdown("""
+        <style>
         div.stButton > button[key="login_button"] {
             background-color: #bebebe;
             color: black;
@@ -30,48 +55,47 @@ def main():
             color: black;
             border: 1.5px solid #000000;
         }
-        /* Link Create Account dengan underline */
         div.stButton > button[key="create_account_button"] {
             text-decoration: underline;
             color: black;
         }
         </style>
     """, unsafe_allow_html=True)
-    # 1. Buat 3 kolom utama agar seluruh form berada pas di tengah layar
+
     col1, col2, col3 = st.columns([1, 1.2, 1])
+
     with col2:
         st.header("LOGIN", text_alignment='center')
-        # 2. Tambahkan placeholder="username" & placeholder="password"
+
         username = st.text_input("Masukkan Username", placeholder="username")
         password = st.text_input("Masukkan Password", type="password", placeholder="password")
-        # 3. Create Account ditaruh di tengah di atas tombol LOGIN
+
+        # Tombol yang mengarahkan ke halaman Register
         sub_c1, sub_c2, sub_c3 = st.columns([1, 2, 1])
         with sub_c2:
             if st.button("Create Account?", type="tertiary", key="create_account_button", use_container_width=True):
-                st.write("Arahkan ke create account!")
-        # 4. Tombol LOGIN berada di tengah dan berukuran proporsional
+                # Pindah ke tampilan register lalu refresh
+                st.session_state.halaman = "register"
+                st.rerun()
+
+        # Tombol Login
         btn_c1, btn_c2, btn_c3 = st.columns([1, 1.8, 1])
         with btn_c2:
             if st.button("LOGIN", key="login_button", use_container_width=True):
-                if username in pengguna and pengguna[username] == password:
-                    st.session_state.logged_in = True
-                    st.session_state.username = username
-                    st.success("Login berhasil!")
-                    st.switch_page("pages/Beranda.py")
+                # Cek ke data yang tersimpan di st.session_state.data_pengguna
+                if not username or not password:
+                    st.error("Username dan Password tidak boleh kosong!")
                 else:
-                    st.error("Username atau password salah!")
+                    berhasil,pesan,user_data = cek_login(username,password)
+                    if berhasil:
+                        st.session_state.logged_in = True
+                        st.session_state.username = user_data["username"]
+                        st.session_state.id_user = user_data['id_user']
 
-            
-    
-
-
-
-
-
-
-
-
-
+                        st.success(pesan)
+                        st.switch_page('pages/Beranda.py')
+                    else:
+                        st.error(pesan)
 
 
 if __name__ == '__main__':
