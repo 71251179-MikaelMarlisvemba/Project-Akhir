@@ -33,4 +33,6 @@ st.markdown("""
 # ==========================================
 st.title("Beranda - Koleksi Nama")
 
-# Kamu bisa lanjut menuliskan komponen halamanmu di bawah sini...
+st.selectbox("Filter Status", ["Semua", "Belum Dibaca", "Sedang Dibaca", "Selesai Dibaca"], key="filter_status")
+
+st.selectbox("Sort by:", ["A-Z", "Z-A"], key="sort_by")

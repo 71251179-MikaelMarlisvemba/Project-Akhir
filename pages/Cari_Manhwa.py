@@ -27,3 +27,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+st.header('Cari Manhwa')
+
+st.text_input("Cari Manhwa", placeholder="Masukkan nama manhwa")
