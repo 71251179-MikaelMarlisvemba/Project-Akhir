@@ -16,7 +16,7 @@ with col2:
         st.switch_page("register.py")
 
     if submit:
-        if not username or not password:
+        if username == "" or password == "":
             st.error("Username dan Password tidak boleh kosong!")
         else:
             berhasil, pesan, user_data = cek_login(username, password)
@@ -27,3 +27,6 @@ with col2:
                 st.rerun()
             else:
                 st.error(pesan)
+
+    if "berhasil_buat_akun" in st.session_state:
+        st.success(st.session_state.pop("berhasil_buat_akun"), icon="✅")

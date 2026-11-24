@@ -1,4 +1,5 @@
 # db.py
+import streamlit as st
 from supabase import create_client, Client
 
 # Minta URL dan Key ini dari temanmu
@@ -19,10 +20,7 @@ def cek_login(username, password):
     
     return False, "Username atau password salah!", None
 
-
-
 def buat_akun_baru(username, password):
-
 
     # Cek apakah username sudah ada
     check_user = supabase.table("User").select("username").eq("username", username).execute()

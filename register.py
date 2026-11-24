@@ -18,14 +18,17 @@ with col2:
         st.switch_page("login.py")
 
     if submit:
-        if not new_username or not new_password:
+        if  new_username == "" or  new_password == "":
             st.error("Username dan Password tidak boleh kosong!")
         elif new_password != confirm_password:
             st.error("Konfirmasi password tidak cocok!")
+        elif len(new_password) <8:
+            st.error("Panjang minimal password 8") 
         else:
             berhasil, pesan = buat_akun_baru(new_username, new_password)
             if berhasil:
-                st.success(pesan)
+                st.session_state["berhasil_buat_akun"] = ("Akun berhasil dibuat!")
+                st.switch_page("login.py")
             else:
                 st.error(pesan)
 # def halaman_register():
