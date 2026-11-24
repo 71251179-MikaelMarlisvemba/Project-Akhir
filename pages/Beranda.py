@@ -28,10 +28,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ==========================================
-# KONTEN HALAMAN BERANDA
-# ==========================================
-st.title("Beranda - Koleksi Nama")
+st.title(f"Beranda - Koleksi {st.session_state["username"]}")
 
 st.selectbox("Filter Status", ["Semua", "Belum Dibaca", "Sedang Dibaca", "Selesai Dibaca"], key="filter_status")
 
