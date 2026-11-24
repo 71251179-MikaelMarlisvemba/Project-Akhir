@@ -4,7 +4,6 @@ from db import supabase
 from manhwa import cari_manhwa
 from datetime import datetime
 from zoneinfo import ZoneInfo
-import random as rand
 
 st.header("Cari Manhwa")
 
@@ -37,6 +36,7 @@ data_manhwa = [item["judul_manhwa"] for item in data_user.data]
 
 genre = st.selectbox("**Filter Kategori**", options=genres)
 
+
 if "hasil_manhwa" not in st.session_state:
     st.session_state.hasil_manhwa = []
     
@@ -56,17 +56,17 @@ def muat_manhwa():
 if st.button("**Cari**", use_container_width=True):
     st.session_state.manhwa = cari
     st.session_state.genre = genre
+    st.session_state.page_cari = 1
     muat_manhwa()
     
-
 hasil = st.session_state.hasil_manhwa
 st.session_state.jumlah = len(hasil)
 
 if len(hasil) == 0:
-    st.subheader("Hasil Pencarian: ")
+    st.subheader("Hasil Pencarian")
             
 else:
-    st.subheader(f"Hasil Pencarian (Page {st.session_state.page_cari}): ")
+    st.subheader(f"Hasil Pencarian")
     cols = st.columns(3)
     
     for index, manga in enumerate(hasil):
@@ -74,8 +74,8 @@ else:
             with st.container(border=True, height="stretch"):
                 cover = manga["coverImage"]["large"]
                 
-                st.image(cover,use_container_width=True)
-                
+                st.image(cover, use_container_width=True)
+
                 judul = (manga["title"]["english"] or manga["title"]["romaji"])
                 
                 st.markdown(f"**{judul}**")
@@ -108,15 +108,17 @@ else:
                             st.warning("Gagal menambahkan manhwa")
                         else:
                             st.rerun()
-                            st.session_state.hasil = []
 
-col1, col2 = st.columns(2)
-if col1.button("Sebelumnya", disabled=st.session_state.page == 1, use_container_width=True):
+col1, col2, col3 = st.columns(3)
+if col1.button("Sebelumnya", disabled=st.session_state.page_cari == 1, use_container_width=True):
     st.session_state.page_cari -= 1
     muat_manhwa()
     st.rerun()
+    
+if col2.button(f"**Halaman {st.session_state.page_cari}**", use_container_width=True, type="tertiary", disabled=True):
+    st.write
             
-if col2.button("Selanjutnya", disabled=st.session_state.jumlah < 18, use_container_width=True):
+if col3.button("Selanjutnya", disabled=st.session_state.jumlah < 3, use_container_width=True):
     st.session_state.page_cari += 1
     muat_manhwa()
     st.rerun()

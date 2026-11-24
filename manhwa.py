@@ -9,7 +9,7 @@ query(
     $genre: String,
     $page: Int
 ) {
-    Page(page: $page, perPage: 18) {
+    Page(page: $page, perPage: 3) {
         pageInfo {
             currentPage
             hasNextPage
@@ -72,4 +72,5 @@ def cari_manhwa(search="", genre="Semua", page=1):
         raise ValueError(result["erorrs"])
     
     return result["data"]["Page"]["media"]
+    
     
