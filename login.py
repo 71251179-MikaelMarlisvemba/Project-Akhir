@@ -4,7 +4,7 @@ from db import cek_login
 col1, col2, col3 = st.columns([1, 1.2, 1])
 
 with col2:
-    st.header("LOGIN", text_alignment="center", anchor=False)
+    st.header("LOGIN", text_alignment="center")
 
     with st.form("form_login"):
         username = st.text_input("Masukkan Username", placeholder="username")
