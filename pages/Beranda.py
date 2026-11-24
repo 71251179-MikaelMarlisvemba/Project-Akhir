@@ -1,7 +1,7 @@
 import streamlit as st
 from db import supabase 
 import math
-from google import genai
+from rekomendasi import rekomendasi
 
 st.title(f"Beranda - Koleksi {st.session_state["username"]}")
 
@@ -135,13 +135,6 @@ if data_halaman != []:
     st.subheader("Rekomendasi Manhwa")
     st.caption("AI akan merekomendasikan 5 judul berdasarkan manhwa di bookmark Anda")
     if st.button("Rekomendasikan 5 Manhwa", type="primary", width="stretch"):
-        key = st.secrets["supabase"]["GEMINI_API_KEY"]
-        
-        client = genai.Client()
 
-        interaction = client.interactions.create(
-            model="gemini-3.5-flash",
-            input=f"Berdasarkan variabel {data_halaman} berikan rekomendasi 5 manhwa yang serupa yang tersedia di website https://anilist.co/. Format : Rekomendasi untuk Anda : 1. Judul"
-        )
         with st.container(border=True):
-            st.write(interaction.output_text)
+            st.write(rekomendasi(data_halaman))
