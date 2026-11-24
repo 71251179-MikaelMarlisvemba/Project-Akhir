@@ -1,17 +1,17 @@
 # register.py
 import streamlit as st
-from db import buat_akun_baru  # Import fungsi insert ke Supabase
+from db import buat_akun_baru
 
 col1, col2, col3 = st.columns([1, 1, 1])
 
 with col2:
-    st.header("CREATE ACCOUNT", text_alignment="center")
+    st.header("Create Account", text_alignment="center")
 
     with st.form("form_register"):
-        new_username = st.text_input("Buat Username Baru", placeholder="username baru")
-        new_password = st.text_input("Buat Password Baru", type="password", placeholder="password baru")
-        confirm_password = st.text_input("Konfirmasi Password", type="password", placeholder="ulangi password")
-        submit = st.form_submit_button("CREATE ACCOUNT", type="primary", width="stretch")
+        new_username = st.text_input("Buat Username Baru", placeholder="Username")
+        new_password = st.text_input("Buat Password Baru", type="password", placeholder="Password")
+        confirm_password = st.text_input("Konfirmasi Password", type="password", placeholder="Ulangi Password")
+        submit = st.form_submit_button("Create Account", type="primary", width="stretch")
         kembali = st.form_submit_button("Sudah punya akun? Login", type='tertiary',width="stretch")
 
     if kembali:
