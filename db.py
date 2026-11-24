@@ -2,11 +2,9 @@
 import streamlit as st
 from supabase import create_client, Client
 
-# Minta URL dan Key ini dari temanmu
 SUPABASE_URL = st.secrets["SUPABASE_URL"]
 SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
 
-# Inisialisasi koneksi Supabase
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 def data_bookmark(id_user, id_manhwa):
