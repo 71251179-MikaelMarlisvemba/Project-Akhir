@@ -27,7 +27,9 @@ genres = [
     "Thriller"
 ]
 
-user = (supabase.table("User").select("id_user").eq("username", st.session_state.username).execute())
+
+user = (supabase.table("User").select("id_user").eq("username", st.session_state["username"]).execute())
+
 id_user = user.data[0]["id_user"]
 
 data_user = (supabase.table("bookmark_user").select("judul_manhwa").eq("id_user", id_user).execute())

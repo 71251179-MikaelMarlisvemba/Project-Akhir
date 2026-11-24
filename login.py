@@ -4,13 +4,15 @@ from db import cek_login
 col1, col2, col3 = st.columns([1, 1.2, 1])
 
 with col2:
+
     st.header("LOGIN", text_alignment="center")
 
+
     with st.form("form_login"):
-        username = st.text_input("Masukkan Username", placeholder="username")
-        password = st.text_input("Masukkan Password", type="password", placeholder="password")
-        submit = st.form_submit_button("LOGIN", type="primary", width="stretch")
-        register = st.form_submit_button("Create Account?", type="tertiary", width="stretch")
+        username = st.text_input("Masukkan Username", placeholder="Username")
+        password = st.text_input("Masukkan Password", type="password", placeholder="Password")
+        submit = st.form_submit_button("Login", type="primary", width="stretch")
+        register = st.form_submit_button("Belum punya akun? Buat Akun", type="tertiary", width="stretch")
 
     if register:
         st.switch_page("register.py")

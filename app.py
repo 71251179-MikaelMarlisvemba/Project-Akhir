@@ -8,32 +8,39 @@ if "username" not in st.session_state:
     st.session_state["username"] = ""
 if "password" not in st.session_state:
     st.session_state["password"] = ""
+    
+if "edit" not in st.session_state:
+    st.session_state["edit"] = False
 
-if not st.session_state["logged_in"]:
+if st.session_state["logged_in"] == True and st.session_state["edit"] == False:
+    pg = st.navigation(
+        [
+            st.Page("pages/Beranda.py", title="Beranda", default=True),
+            st.Page("pages/cariManhwa.py", title="Cari Manhwa"),
+            st.Page("pages/Statistik.py", title="Statistik"),
+            st.Page("pages/pengaturan.py", title="Pengaturan")
+        ],
+    )
+    pg.run()    
+
+    
+elif st.session_state["logged_in"] == True and st.session_state["edit"] == True:
+    pg = st.navigation([
+        st.Page("editStatus.py", title="Edit Status")
+    ], position="hidden")
+    
+    pg.run()
+    
+else:
     pg = st.navigation(
         [
             st.Page("login.py", title="Login", default=True),
             st.Page("register.py", title="Create Account"),
         ],
-        position="hidden",
-    )
-else:
-    pg = st.navigation(
-        [
-            st.Page("pages/beranda.py", title="Beranda", default=True),
-            st.Page("pages/cariManhwa.py", title="Cari Manhwa"),
-            st.Page("pages/pengaturan.py", title="Pengaturan"),
-            st.Page("pages/statistik.py", title="Statistik"),
-            st.Page("editStatus.py", title="Edit Status"),
-        ],
-        position="hidden",
-    )
-    with st.sidebar:
-        st.page_link("pages/beranda.py", label="Beranda")
-        st.page_link("pages/cariManhwa.py", label="Cari Manhwa")
-        st.page_link("pages/statistik.py", label="Statistik")
-        st.page_link("pages/pengaturan.py", label="Pengaturan")
-pg.run()
+    position="hidden")
+    
+    pg.run()
+    
 # import streamlit as st 
 # from db import cek_login
 # from register import halaman_register  # Import tampilan register dari register.py
