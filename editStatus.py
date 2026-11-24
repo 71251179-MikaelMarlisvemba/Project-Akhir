@@ -6,7 +6,9 @@ st.title("Edit Status")
 opsi = ["Belum Dibaca", "Sedang Dibaca", "Selesai Dibaca"]
 
 if "error" not in st.session_state:
-    st.session_state["error"] = False
+    st.session_state["error"] = None
+if "chapter" not in st.session_state:
+    st.session_state["chapter"] = 0
 
 manhwa = supabase.table("bookmark_user").select("*").eq("id_user", st.session_state["id_user"]).eq("id_manhwa",st.session_state["id_edit"]).execute()
 data = manhwa.data[0]
@@ -22,23 +24,23 @@ with mid:
 status = st.selectbox("Status",options=opsi, width="stretch")
 
 if status == "Sedang Dibaca":
-    chapter = st.number_input(label="Chapter terahkir dibaca", min_value=1)
+    st.session_state["chapter"] = st.number_input(label="Chapter terahkir dibaca", min_value=1)
 
 x1,x2 = st.columns(2)
 with x1:
     if st.button("Simpan", width="stretch", type="primary"):
-        if data["status"] == "Sedang Dibaca" and data["chapter_terahkir"] == chapter:
+        if data["status"] == "Sedang Dibaca" and data["chapter_terakhir"] == st.session_state["chapter"]:
             st.session_state["error"] = ("Chapter tidak boleh sama")
         elif data["status"] == status:
             st.session_state["error"] = ("Pilih status yang lain")
         elif status == "Sudah Dibaca":
-            data["chapter_terahir"] = False
+            data["chapter_terakhir"] = None
             data["status"] = "Sudah Dibaca"
         elif status == "Belum Dibaca":
-            data["chapter_terahir"] = False
+            data["chapter_terakhir"] = None
             data["status"] = "Belum Dibaca"
         elif status == "Sedang Dibaca":
-            data["chapter_terahir"] = chapter
+            data["chapter_terakhir"] = chapter
             data["status"] = "Sedang Dibaca"
         # st.session_state["id_edit"] = False
 
@@ -48,5 +50,5 @@ with x2:
         st.session_state["id_edit"] = False
         st.switch_page["pages/beranda/py"]
 
-if "error" in st.session_state:
+if st.session_state["error"] is not None:
     st.error(st.session_state["error"])
