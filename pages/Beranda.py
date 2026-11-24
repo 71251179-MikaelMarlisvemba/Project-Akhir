@@ -1,6 +1,7 @@
 import streamlit as st
 from db import supabase 
 import math
+from google import genai
 
 st.title(f"Beranda - Koleksi {st.session_state["username"]}")
 
@@ -111,7 +112,8 @@ for i, manhwa in enumerate(data_halaman):
             with col1 :
                 if st.button("Edit Status", key=f"edit_{manhwa['id_manhwa']}_{i}",width="stretch"):
                     st.session_state["id_edit"] = manhwa["id_manhwa"]
-                    st.switch_page("editStatus.py")
+                    st.session_state["edit"] = True
+                    st.rerun()
             with col2 :
                 if st.button("Hapus", key=f"hapus_{manhwa["id_manhwa"]}_{i}",width="stretch",type="primary"):
                     supabase.table("bookmark_user").delete().eq("id_manhwa",manhwa["id_manhwa"]).execute()
@@ -133,4 +135,13 @@ if data_halaman != []:
     st.subheader("Rekomendasi Manhwa")
     st.caption("AI akan merekomendasikan 5 judul berdasarkan manhwa di bookmark Anda")
     if st.button("Rekomendasikan 5 Manhwa", type="primary", width="stretch"):
-        pass
+        key = st.secrets["supabase"]["GEMINI_API_KEY"]
+        
+        client = genai.Client()
+
+        interaction = client.interactions.create(
+            model="gemini-3.5-flash",
+            input=f"Berdasarkan variabel {data_halaman} berikan rekomendasi 5 manhwa yang serupa yang tersedia di website https://anilist.co/. Format : Rekomendasi untuk Anda : 1. Judul"
+        )
+        with st.container(border=True):
+            st.write(interaction.output_text)
