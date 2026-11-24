@@ -41,7 +41,7 @@ if "hasil_manhwa" not in st.session_state:
     st.session_state.hasil_manhwa = []
     
 if "page_cari" not in st.session_state:
-    st.session_state.page = 1
+    st.session_state.page_cari = 1
     
 if "jumlah" not in st.session_state:
     st.session_state.jumlah = 0
