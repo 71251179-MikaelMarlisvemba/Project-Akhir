@@ -2,11 +2,10 @@
 import streamlit as st
 from supabase import create_client, Client
 
-# Minta URL dan Key ini dari temanmu
+
 SUPABASE_URL = st.secrets["supabase"]["SUPABASE_URL"]
 SUPABASE_KEY = st.secrets["supabase"]["SUPABASE_KEY"]
 
-# Inisialisasi koneksi Supabase
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 def data_bookmark(id_user, id_manhwa):
@@ -26,12 +25,12 @@ def cek_login(username, password):
 
 def buat_akun_baru(username, password):
 
-    # Cek apakah username sudah ada
+    # Cek usnnya cuy
     check_user = supabase.table("User").select("username").eq("username", username).execute()
     if check_user.data and len(check_user.data) > 0:
         return False, "Username sudah terdaftar! Gunakan yang lain."
 
-    # Masukkan user baru ke tabel 'User'
+    # masukkin akunnya wicis username dan password
     supabase.table("User").insert({
         "username": username,
         "password": password
