@@ -62,11 +62,12 @@ if st.button("**Cari**", use_container_width=True):
 hasil = st.session_state.hasil_manhwa
 st.session_state.jumlah = len(hasil)
 
+st.subheader("Hasil Pencarian")
+
 if len(hasil) == 0:
-    st.subheader("Hasil Pencarian")
+    st.error("Manhwa tidak ada/tidak tersedia.")
             
 else:
-    st.subheader(f"Hasil Pencarian")
     cols = st.columns(3)
     
     for index, manga in enumerate(hasil):
