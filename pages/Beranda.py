@@ -12,6 +12,8 @@ data_manhwa = supabase.table("bookmark_user").select("*").eq("id_user",st.sessio
 
 if "beranda_now" not in st.session_state:
     st.session_state["beranda_now"] = 1
+if "id_edit" not in st.session_state:
+    st.session_state["id_edit"] = 0
 
 def ke_sebelumnya():
     st.session_state["beranda_now"] -= 1
@@ -108,6 +110,8 @@ for i, manhwa in enumerate(data_halaman):
             st.subheader(manhwa["judul_manhwa"])
             st.caption(manhwa["genre"])
             st.caption(f"Status: {manhwa["status"]}")
+            if manhwa["chapter_terakhir"] != 0 and manhwa["chapter_terakhir"]  != None:
+                st.caption(f"Chapter terahkir: {manhwa["chapter_terakhir"]}")
             col1,col2 = st.columns([1,1])
             with col1 :
                 if st.button("Edit Status", key=f"edit_{manhwa['id_manhwa']}_{i}",width="stretch"):
