@@ -110,16 +110,18 @@ if st.button("**Cari**", use_container_width=True):
                             else:
                                 st.rerun()
 
-    col1, col2, col3 = st.columns(3)
-    if col1.button("Sebelumnya", disabled=st.session_state.page_cari == 1, use_container_width=True):
-        st.session_state.page_cari -= 1
-        muat_manhwa()
-        st.rerun()
-        
-    if col2.button(f"**Halaman {st.session_state.page_cari}**", use_container_width=True, type="tertiary", disabled=True):
-        st.write
-                
-    if col3.button("Selanjutnya", disabled=st.session_state.jumlah < 3, use_container_width=True):
-        st.session_state.page_cari += 1
-        muat_manhwa()
-        st.rerun()
+    if len(hasil) != 0:
+    
+        col1, col2, col3 = st.columns(3)
+        if col1.button("Sebelumnya", disabled=st.session_state.page_cari == 1, use_container_width=True):
+            st.session_state.page_cari -= 1
+            muat_manhwa()
+            st.rerun()
+            
+        if col2.button(f"**Halaman {st.session_state.page_cari}**", use_container_width=True, type="tertiary", disabled=True):
+            st.write
+                    
+        if col3.button("Selanjutnya", disabled=st.session_state.jumlah < 3, use_container_width=True):
+            st.session_state.page_cari += 1
+            muat_manhwa()
+            st.rerun()
