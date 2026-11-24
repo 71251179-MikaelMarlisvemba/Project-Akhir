@@ -18,7 +18,7 @@ if st.session_state["logged_in"] == True and st.session_state["edit"] == False:
             st.Page("pages/Beranda.py", title="Beranda", default=True),
             st.Page("pages/cariManhwa.py", title="Cari Manhwa"),
             st.Page("pages/Statistik.py", title="Statistik"),
-            st.Page("pages/pengaturan.py", title="Pengaturan")
+            st.Page("pages/Pengaturan.py", title="Pengaturan")
         ],
     )
     pg.run()    
