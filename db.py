@@ -9,6 +9,10 @@ SUPABASE_KEY = 'sb_publishable_RIR6X5eein1kBRZF7F5YBg_kBdQBW9i'
 # Inisialisasi koneksi Supabase
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+def data_bookmark(id_user, id_manhwa):
+    response = supabase.table("bookmark_user").select("*").eq("id_user", id_user).eq("id_manhwa",id_manhwa).execute()
+    st.write(response)
+    return response.data
 
 def cek_login(username, password):
 
