@@ -1,5 +1,4 @@
 import streamlit as st
-import app
 from db import supabase
 
 st.title("Pengaturan")
