@@ -38,7 +38,7 @@ genre = st.selectbox("**Filter Kategori**", options=genres)
 if "hasil_manhwa" not in st.session_state:
     st.session_state.hasil_manhwa = []
     
-if "page" not in st.session_state:
+if "page_cari" not in st.session_state:
     st.session_state.page = 1
     
 if "jumlah" not in st.session_state:
@@ -60,17 +60,6 @@ if st.button("**Cari**", use_container_width=True):
 hasil = st.session_state.hasil_manhwa
 st.session_state.jumlah = len(hasil)
 
-col1, col2 = st.columns(2)
-if col1.button("Sebelumnya", disabled=st.session_state.page == 1, use_container_width=True):
-    st.session_state.page -= 1
-    muat_manhwa()
-    st.rerun()
-            
-if col2.button("Selanjutnya", disabled=st.session_state.jumlah < 18, use_container_width=True):
-    st.session_state.page += 1
-    muat_manhwa()
-    st.rerun()
-
 if len(hasil) == 0:
     st.subheader("Hasil Pencarian: ")
             
@@ -80,7 +69,7 @@ else:
     
     for index, manga in enumerate(hasil):
         with cols[index % 3]:
-            with st.container(border=True):
+            with st.container(border=True, height="stretch"):
                 cover = manga["coverImage"]["large"]
                 
                 st.image(cover,use_container_width=True)
@@ -118,3 +107,14 @@ else:
                         else:
                             st.rerun()
                             st.session_state.hasil = []
+
+col1, col2 = st.columns(2)
+if col1.button("Sebelumnya", disabled=st.session_state.page == 1, use_container_width=True):
+    st.session_state.page_cari -= 1
+    muat_manhwa()
+    st.rerun()
+            
+if col2.button("Selanjutnya", disabled=st.session_state.jumlah < 18, use_container_width=True):
+    st.session_state.page_cari += 1
+    muat_manhwa()
+    st.rerun()
