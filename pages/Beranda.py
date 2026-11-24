@@ -17,8 +17,17 @@ cols = st.columns(3)
 
 for i, manhwa in enumerate(data_manhwa.data):
     with cols[i % 3]:
-        with st.container(border=True, height="stretch", width="stretch"):
+        with st.container(border=True, height="stretch"):
             st.image(manhwa["cover"],width="stretch")
             st.subheader(manhwa["judul_manhwa"])
             st.caption(manhwa["genre"])
             st.caption(f"Status: {manhwa["status"]}")
+            col1,col2 = st.columns([1,1])
+            with col1 :
+                if st.button("Edit Status", key=f"Edit{manhwa["id_manhwa"]}",width="stretch"):
+                    st.session_state["id_edit"] = manhwa["id_manhwa"]
+                    st.switch_page("editStatus.py")
+            with col2 :
+                if st.button("Hapus", key=f"hapus{manhwa["id_manhwa"]}",width="stretch",type="primary"):
+                    supabase.table("bookmark_user").delete().eq("id_manhwa",manhwa["id_manhwa"]).execute()
+                    st.rerun()
