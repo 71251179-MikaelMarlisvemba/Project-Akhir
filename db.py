@@ -8,11 +8,6 @@ SUPABASE_KEY = st.secrets["supabase"]["SUPABASE_KEY"]
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-def data_bookmark(id_user, id_manhwa):
-    response = supabase.table("bookmark_user").select("*").eq("id_user", id_user).eq("id_manhwa",id_manhwa).execute()
-    st.write(response)
-    return response.data
-
 def cek_login(username, password):
 
     response = supabase.table("User").select("*").eq("username", username).eq("password", password).execute()
