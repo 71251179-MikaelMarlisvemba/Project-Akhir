@@ -59,66 +59,69 @@ if st.button("**Cari**", use_container_width=True):
     st.session_state.page_cari = 1
     muat_manhwa()
     
-hasil = st.session_state.hasil_manhwa
-st.session_state.jumlah = len(hasil)
+    hasil = st.session_state.hasil_manhwa
+    st.session_state.jumlah = len(hasil)
 
-if len(hasil) == 0:
     st.subheader("Hasil Pencarian")
-            
-else:
-    st.subheader(f"Hasil Pencarian")
-    cols = st.columns(3)
-    
-    for index, manga in enumerate(hasil):
-        with cols[index % 3]:
-            with st.container(border=True, height="stretch"):
-                cover = manga["coverImage"]["large"]
-                
-                st.image(cover, use_container_width=True)
 
-                judul = (manga["title"]["english"] or manga["title"]["romaji"])
+    if len(hasil) == 0:
+        st.error("Manhwa tidak ada/tidak tersedia.")
                 
-                st.markdown(f"**{judul}**")
-                
-                st.caption(f"Jumlah Chapter : {manga["chapters"] or "Belum ada chapter (Ongoing)"}")
-                
-                st.caption(", ".join(manga["genres"]))
-                
-                waktu = datetime.now(ZoneInfo("Asia/Jakarta")).isoformat()
-                
-                if judul in data_manhwa:
-                    st.button("Tersimpan", disabled=True, use_container_width=True, key=f"tersimpan_{manga["id"]}")
-                
-                else:
-                    if st.button("Bookmark", key=f"library_{manga["id"]}", use_container_width=True):
-                        tambah = {
-                            "id_user": id_user,
-                            "judul_manhwa" : judul,
-                            "jumlah_chapter" : manga["chapters"],
-                            "genre" : ", ".join(manga["genres"]),
-                            "chapter_terakhir" : None,
-                            "status" : "Belum Dibaca",
-                            "waktu_ditambahkan" : waktu,
-                            "cover" : cover
-                        }
-                        
-                        tambah_manhwa = (supabase.table("bookmark_user").insert(tambah)).execute()
-                        
-                        if len(tambah_manhwa.data) == 0:
-                            st.warning("Gagal menambahkan manhwa")
-                        else:
-                            st.rerun()
+    else:
+        cols = st.columns(3)
+        
+        for index, manga in enumerate(hasil):
+            with cols[index % 3]:
+                with st.container(border=True, height="stretch"):
+                    cover = manga["coverImage"]["large"]
+                    
+                    st.image(cover, use_container_width=True)
 
-col1, col2, col3 = st.columns(3)
-if col1.button("Sebelumnya", disabled=st.session_state.page_cari == 1, use_container_width=True):
-    st.session_state.page_cari -= 1
-    muat_manhwa()
-    st.rerun()
+                    judul = (manga["title"]["english"] or manga["title"]["romaji"])
+                    
+                    st.markdown(f"**{judul}**")
+                    
+                    st.caption(f"Jumlah Chapter : {manga["chapters"] or "Belum ada chapter (Ongoing)"}")
+                    
+                    st.caption(", ".join(manga["genres"]))
+                    
+                    waktu = datetime.now(ZoneInfo("Asia/Jakarta")).isoformat()
+                    
+                    if judul in data_manhwa:
+                        st.button("Tersimpan", disabled=True, use_container_width=True, key=f"tersimpan_{manga["id"]}")
+                    
+                    else:
+                        if st.button("Bookmark", key=f"library_{manga["id"]}", use_container_width=True):
+                            tambah = {
+                                "id_user": id_user,
+                                "judul_manhwa" : judul,
+                                "jumlah_chapter" : manga["chapters"],
+                                "genre" : ", ".join(manga["genres"]),
+                                "chapter_terakhir" : None,
+                                "status" : "Belum Dibaca",
+                                "waktu_ditambahkan" : waktu,
+                                "cover" : cover
+                            }
+                            
+                            tambah_manhwa = (supabase.table("bookmark_user").insert(tambah)).execute()
+                            
+                            if len(tambah_manhwa.data) == 0:
+                                st.warning("Gagal menambahkan manhwa")
+                            else:
+                                st.rerun()
+
+    if len(hasil) != 0:
     
-if col2.button(f"**Halaman {st.session_state.page_cari}**", use_container_width=True, type="tertiary", disabled=True):
-    st.write
+        col1, col2, col3 = st.columns(3)
+        if col1.button("Sebelumnya", disabled=st.session_state.page_cari == 1, use_container_width=True):
+            st.session_state.page_cari -= 1
+            muat_manhwa()
+            st.rerun()
             
-if col3.button("Selanjutnya", disabled=st.session_state.jumlah < 3, use_container_width=True):
-    st.session_state.page_cari += 1
-    muat_manhwa()
-    st.rerun()
+        if col2.button(f"**Halaman {st.session_state.page_cari}**", use_container_width=True, type="tertiary", disabled=True):
+            st.write
+                    
+        if col3.button("Selanjutnya", disabled=st.session_state.jumlah < 3, use_container_width=True):
+            st.session_state.page_cari += 1
+            muat_manhwa()
+            st.rerun()
