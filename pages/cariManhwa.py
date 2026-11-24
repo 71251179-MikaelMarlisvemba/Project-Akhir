@@ -50,7 +50,7 @@ def muat_manhwa():
     st.session_state.hasil_manhwa = cari_manhwa(
             search=st.session_state.manhwa,
             genre=st.session_state.genre,
-            page=st.session_state.page
+            page=st.session_state.page_cari
         )
 
 if st.button("**Cari**", use_container_width=True):
@@ -66,7 +66,7 @@ if len(hasil) == 0:
     st.subheader("Hasil Pencarian: ")
             
 else:
-    st.subheader(f"Hasil Pencarian (Page {st.session_state.page}): ")
+    st.subheader(f"Hasil Pencarian (Page {st.session_state.page_cari}): ")
     cols = st.columns(3)
     
     for index, manga in enumerate(hasil):
@@ -80,7 +80,7 @@ else:
                 
                 st.markdown(f"**{judul}**")
                 
-                st.caption(f"Jumlah Chapter : {manga["chapters"] or rand.randint(1, 100)}")
+                st.caption(f"Jumlah Chapter : {manga["chapters"] or "Belum ada chapter (Ongoing)"}")
                 
                 st.caption(", ".join(manga["genres"]))
                 
