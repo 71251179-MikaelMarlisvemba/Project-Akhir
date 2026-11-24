@@ -1,5 +1,6 @@
 import streamlit as st
 from db import supabase 
+import math
 
 st.title(f"Beranda - Koleksi {st.session_state["username"]}")
 
@@ -79,19 +80,26 @@ elif urutan == "Terbaru":
     data_urut = quick_sort_waktu(data_manhwa.data)[::-1]
 
 if status == "Semua":
-    pass
+    data_filter = data_urut
 elif status == "Belum Dibaca":
-    data_urut = urut_status(data_urut,"Belum Dibaca")
+    data_filter = urut_status(data_urut,"Belum Dibaca")
 elif status == "Sedang Dibaca":
-    data_urut = urut_status(data_urut,"Sedang Dibaca")
+    data_filter= urut_status(data_urut,"Sedang Dibaca")
 elif status == "Selesai Dibaca":
-    data_urut = urut_status(data_urut,"Selesai Dibaca")
+    data_filter = urut_status(data_urut,"Selesai Dibaca")
 
-if data_urut == []:
+if data_filter == [] and data_urut != []:
     st.warning(f"**Belum ada manhwa yang di bookmark dengan status {status}**")
 
+total_manhwa_perhalaman = 3
+total_halaman = max(1, math.ceil(len(data_filter)/total_manhwa_perhalaman))
+st.session_state["beranda_now"] = min(st.session_state["beranda_now"], total_halaman) # antisipasi delete
+
+awal = (st.session_state["beranda_now"] - 1) * total_manhwa_perhalaman
+data_halaman = data_filter[awal:awal + total_manhwa_perhalaman]
+
 kolom = st.columns(3)
-for i, manhwa in enumerate(data_urut):
+for i, manhwa in enumerate(data_halaman):
     with kolom[i % 3]:
         with st.container(border=True, height="stretch"):
             st.image(manhwa["cover"],width="stretch")
@@ -108,12 +116,13 @@ for i, manhwa in enumerate(data_urut):
                     supabase.table("bookmark_user").delete().eq("id_manhwa",manhwa["id_manhwa"]).execute()
                     st.rerun()
 
-x1,x2,x3 = st.columns(3)
-with x1:
-    st.button("Sebelumnya", disabled=st.session_state["beranda_now"] <= 1,on_click=ke_sebelumnya, width="stretch")
+if data_halaman != []:
+    x1,x2,x3 = st.columns(3)
+    with x1:
+        st.button("Sebelumnya", disabled=st.session_state["beranda_now"] <= 1,on_click=ke_sebelumnya, width="stretch")
 
-with x2:
-    st.button(f"**Halaman {st.session_state['beranda_now']}**", disabled=True, width="stretch", type="tertiary")
+    with x2:
+        st.button(f"**Halaman {st.session_state['beranda_now']}**", disabled=True, width="stretch", type="tertiary")
 
-with x3:
-    st.button("Selanjutnya", disabled=st.session_state["beranda_now"] * 3 >= len(data_urut), on_click=ke_selanjutnya, width="stretch")
+    with x3:
+        st.button("Selanjutnya", disabled=st.session_state["beranda_now"] * 3 >= total_halaman, on_click=ke_selanjutnya, width="stretch")
