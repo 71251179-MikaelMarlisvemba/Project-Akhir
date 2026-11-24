@@ -63,7 +63,8 @@ x1,x2 = st.columns([1,1])
 with x1:
     status=st.selectbox("Filter Status", options=opsi_status, on_change=reset_halaman)
 with x2:
-    urutan =st.selectbox("Sort by:", options=opsi_sort, on_change=reset_halaman)
+    urutan =st.selectbox("Urutkan", options=opsi_sort, on_change=reset_halaman)
+st.divider()
 
 data_urut = data_manhwa.data
 
@@ -125,4 +126,11 @@ if data_halaman != []:
         st.button(f"**Halaman {st.session_state['beranda_now']}**", disabled=True, width="stretch", type="tertiary")
 
     with x3:
-        st.button("Selanjutnya", disabled=st.session_state["beranda_now"] * 3 >= total_halaman, on_click=ke_selanjutnya, width="stretch")
+        st.button("Selanjutnya", disabled=st.session_state["beranda_now"] >= total_halaman, on_click=ke_selanjutnya, width="stretch")
+
+    st.divider()
+
+    st.subheader("Rekomendasi Manhwa")
+    st.caption("AI akan merekomendasikan 5 judul berdasarkan manhwa di bookmark Anda")
+    if st.button("Rekomendasikan 5 Manhwa", type="primary", width="stretch"):
+        pass
