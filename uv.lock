@@ -1179,6 +1179,7 @@ source = { editable = "." }
 dependencies = [
     { name = "matplotlib" },
     { name = "pandas" },
+    { name = "requests" },
     { name = "streamlit" },
     { name = "supabase" },
 ]
@@ -1187,6 +1188,7 @@ dependencies = [
 requires-dist = [
     { name = "matplotlib", specifier = ">=3.11.2" },
     { name = "pandas", specifier = ">=3.1.1" },
+    { name = "requests", specifier = ">=2.34.2" },
     { name = "streamlit", specifier = ">=1.67.0" },
     { name = "supabase", specifier = ">=2.34.1" },
 ]

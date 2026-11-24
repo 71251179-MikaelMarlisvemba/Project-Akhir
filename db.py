@@ -1,9 +1,10 @@
 # db.py
+import streamlit as st
 from supabase import create_client, Client
 
 # Minta URL dan Key ini dari temanmu
-SUPABASE_URL = "https://gzignvarbjarfekwldtn.supabase.co/"
-SUPABASE_KEY = 'sb_publishable_RIR6X5eein1kBRZF7F5YBg_kBdQBW9i'
+SUPABASE_URL = st.secrets["SUPABASE_URL"]
+SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
 
 # Inisialisasi koneksi Supabase
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
