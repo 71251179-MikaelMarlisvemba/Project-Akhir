@@ -1,4 +1,3 @@
-
 import streamlit as st
 from db import supabase
 from manhwa import cari_manhwa
@@ -7,7 +6,13 @@ from zoneinfo import ZoneInfo
 
 st.header("Cari Manhwa")
 
-cari = st.text_input("**Cari**", placeholder="Masukkan nama manhwa").strip()
+if "cari_manhwa" not in st.session_state:
+    st.session_state.hasil_manhwa = []
+    st.session_state.page_cari = 1
+    st.session_state.jumlah = 0
+    st.session_state.cari = False
+    
+cari = st.text_input("**Cari**", key="cari_manhwa",placeholder="Masukkan nama manhwa").strip()
 
 genres = [
     "Semua",
@@ -36,16 +41,6 @@ data_manhwa = [item["judul_manhwa"] for item in data_user.data]
 
 genre = st.selectbox("**Filter Kategori**", options=genres)
 
-
-if "hasil_manhwa" not in st.session_state:
-    st.session_state.hasil_manhwa = []
-    
-if "page_cari" not in st.session_state:
-    st.session_state.page_cari = 1
-    
-if "jumlah" not in st.session_state:
-    st.session_state.jumlah = 0
-
 def muat_manhwa():
     st.session_state.hasil_manhwa = cari_manhwa(
             search=st.session_state.manhwa,
@@ -57,17 +52,21 @@ if st.button("**Cari**", use_container_width=True):
     st.session_state.manhwa = cari
     st.session_state.genre = genre
     st.session_state.page_cari = 1
+    st.session_state.cari = True
     muat_manhwa()
     
-    hasil = st.session_state.hasil_manhwa
-    st.session_state.jumlah = len(hasil)
 
-    st.subheader("Hasil Pencarian")
-
-    if len(hasil) == 0:
+hasil = st.session_state.hasil_manhwa
+st.session_state.jumlah = len(hasil)
+    
+if len(hasil) == 0:
+    if st.session_state.cari:
+        st.subheader("Hasil Pencarian")
         st.error("Manhwa tidak ada/tidak tersedia.")
-                
-    else:
+            
+else:
+    if st.session_state.cari:
+        st.subheader("Hasil Pencarian")
         cols = st.columns(3)
         
         for index, manga in enumerate(hasil):
@@ -76,7 +75,6 @@ if st.button("**Cari**", use_container_width=True):
                     cover = manga["coverImage"]["large"]
                     
                     st.image(cover, use_container_width=True)
-
                     judul = (manga["title"]["english"] or manga["title"]["romaji"])
                     
                     st.markdown(f"**{judul}**")
@@ -109,19 +107,18 @@ if st.button("**Cari**", use_container_width=True):
                                 st.warning("Gagal menambahkan manhwa")
                             else:
                                 st.rerun()
+                                
+        if len(hasil) != 0:
 
-    if len(hasil) != 0:
-    
-        col1, col2, col3 = st.columns(3)
-        if col1.button("Sebelumnya", disabled=st.session_state.page_cari == 1, use_container_width=True):
-            st.session_state.page_cari -= 1
-            muat_manhwa()
-            st.rerun()
-            
-        if col2.button(f"**Halaman {st.session_state.page_cari}**", use_container_width=True, type="tertiary", disabled=True):
-            st.write
-                    
-        if col3.button("Selanjutnya", disabled=st.session_state.jumlah < 3, use_container_width=True):
-            st.session_state.page_cari += 1
-            muat_manhwa()
-            st.rerun()
+            col1, col2, col3 = st.columns(3)
+            if col1.button("Sebelumnya", disabled=st.session_state.page_cari == 1, use_container_width=True):
+                st.session_state.page_cari -= 1
+                muat_manhwa()
+                st.rerun()
+                
+            col2.button(f"**Halaman {st.session_state.page_cari}**", use_container_width=True, type="tertiary", disabled=True)
+                        
+            if col3.button("Selanjutnya", disabled=st.session_state.jumlah < 3, use_container_width=True):
+                st.session_state.page_cari += 1
+                muat_manhwa()
+                st.rerun()
