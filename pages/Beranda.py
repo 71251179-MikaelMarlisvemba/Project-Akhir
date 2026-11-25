@@ -143,7 +143,7 @@ if data_halaman != []:
 
     if st.session_state["riwayat_edit"] != []:
         tampil = []
-        st.subheader("Riwayat Edit")
+        st.subheader("**Riwayat Edit**")
         st.caption("Perubahan status atau chapter terakhir")
         isi_riwayat = st.session_state["riwayat_edit"]
         if len(isi_riwayat) == 6:
@@ -171,7 +171,7 @@ if data_halaman != []:
         st.dataframe(tampil)
         st.divider()
 
-    st.subheader("Rekomendasi Manhwa")
+    st.subheader("**Rekomendasi Manhwa**")
     st.caption("AI akan merekomendasikan 5 judul berdasarkan manhwa di bookmark Anda")
     if st.button("Rekomendasikan 5 Manhwa", type="primary", width="stretch"):
 

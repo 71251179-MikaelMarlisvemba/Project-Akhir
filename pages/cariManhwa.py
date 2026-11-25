@@ -48,7 +48,7 @@ def muat_manhwa():
             page=st.session_state.page_cari
         )
 
-if st.button("**Cari**", use_container_width=True):
+if st.button("**Cari**", type='primary', use_container_width=True):
     st.session_state.manhwa = cari
     st.session_state.genre = genre
     st.session_state.page_cari = 1

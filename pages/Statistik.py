@@ -23,11 +23,10 @@ if len(data) != 0:
             else:
                 genre[j] += 1
 
-    jenis_status = []
+    jenis_status = ["Belum Dibaca", "Sedang Dibaca", "Selesai Dibaca"]
     jumlah_status = []
-    for key, value in status.items():
-        jenis_status.append(key)
-        jumlah_status.append(value)
+    for jumlah in jenis_status:
+        jumlah_status.append(status.get(jumlah,0))
 
     jenis_genre = []
     jumlah_genre = []
@@ -46,7 +45,10 @@ if len(data) != 0:
         with x2:
             with st.container(border=True,height="stretch"):
                 st.write("Selesai Dibaca")
-                st.header(status["Selesai Dibaca"])
+                if "Selesai Dibaca" in status:
+                    st.header(status["Selesai Dibaca"])
+                else:
+                    st.header("0")
 
         with x3:
             with st.container(border=True):
