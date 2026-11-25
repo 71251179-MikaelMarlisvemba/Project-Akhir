@@ -8,7 +8,7 @@ opsi = ["Belum Dibaca", "Sedang Dibaca", "Selesai Dibaca"]
 if "error" not in st.session_state:
     st.session_state["error"] = None
 if "sukses" not in st.session_state:
-    st.session_state["sukses"] = ""
+    st.session_state["sukses"] = None
 
 data = st.session_state["id_edit"]
 
@@ -37,9 +37,10 @@ with x1:
             temp = {}
             temp["Manhwa"] = data["judul_manhwa"]
             temp["Sebelum"] = data["status"]
-            temp["Chapter_sebelum"] = data["chapter_terahkir"] 
+            temp["Chapter_sebelum"] = data["chapter_terakhir"] 
             temp["Sesudah"] = status
             temp["Chapter_sesudah"] = chapter
+            st.session_state["riwayat_edit"].append(temp)
             (supabase.table("bookmark_user").update({"status": status, "chapter_terakhir": chapter}).eq("id_manhwa",data["id_manhwa"]).execute())
             st.session_state["sukses"] = (f"Pergantian Status Manhwa {data["judul_manhwa"]} Berhasil!")
             st.session_state["edit"] = False

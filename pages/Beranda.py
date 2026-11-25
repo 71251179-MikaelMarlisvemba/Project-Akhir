@@ -5,7 +5,7 @@ from rekomendasi import rekomendasi
 
 st.title(f"Beranda - Koleksi {st.session_state["username"]}")
 
-if "sukses" in st.session_state:
+if "sukses" in st.session_state and st.session_state["sukses"] is not None:
     st.success(st.session_state.pop("sukses"))
 
 opsi_status = ["Semua","Belum Dibaca", "Sedang Dibaca", "Selesai Dibaca"]
@@ -145,7 +145,7 @@ if data_halaman != []:
         st.subheader("Riwayat Edit")
         st.caption("Perubahan status atau chapter terahkir")
         st.divider()
-
+        st.write(st.session_state["riwayat_edit"])
     st.subheader("Rekomendasi Manhwa")
     st.caption("AI akan merekomendasikan 5 judul berdasarkan manhwa di bookmark Anda")
     if st.button("Rekomendasikan 5 Manhwa", type="primary", width="stretch"):
