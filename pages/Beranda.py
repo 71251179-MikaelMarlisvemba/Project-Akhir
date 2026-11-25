@@ -5,6 +5,9 @@ from rekomendasi import rekomendasi
 
 st.title(f"Beranda - Koleksi {st.session_state["username"]}")
 
+if "sukses" in st.session_state:
+    st.success(st.session_state.pop("sukses"))
+
 opsi_status = ["Semua","Belum Dibaca", "Sedang Dibaca", "Selesai Dibaca"]
 opsi_sort = ["A-Z", "Z-A", "Terlama", "Terbaru"]
 
@@ -13,7 +16,7 @@ data_manhwa = supabase.table("bookmark_user").select("*").eq("id_user",st.sessio
 if "beranda_now" not in st.session_state:
     st.session_state["beranda_now"] = 1
 if "id_edit" not in st.session_state:
-    st.session_state["id_edit"] = 0
+    st.session_state["id_edit"] = {}
 
 def ke_sebelumnya():
     st.session_state["beranda_now"] -= 1
@@ -115,7 +118,7 @@ for i, manhwa in enumerate(data_halaman):
             col1,col2 = st.columns([1,1])
             with col1 :
                 if st.button("Edit Status", key=f"edit_{manhwa['id_manhwa']}_{i}",width="stretch"):
-                    st.session_state["id_edit"] = manhwa["id_manhwa"]
+                    st.session_state["id_edit"] = manhwa
                     st.session_state["edit"] = True
                     st.rerun()
             with col2 :

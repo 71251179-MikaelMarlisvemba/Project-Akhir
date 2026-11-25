@@ -7,48 +7,42 @@ opsi = ["Belum Dibaca", "Sedang Dibaca", "Selesai Dibaca"]
 
 if "error" not in st.session_state:
     st.session_state["error"] = None
-if "chapter" not in st.session_state:
-    st.session_state["chapter"] = 0
+if "sukses" not in st.session_state:
+    st.session_state["sukses"] = ""
 
-manhwa = supabase.table("bookmark_user").select("*").eq("id_user", st.session_state["id_user"]).eq("id_manhwa",st.session_state["id_edit"]).execute()
-data = manhwa.data[0]
+data = st.session_state["id_edit"]
 
 _, mid, _ = st.columns(3)
 
 with mid:
-    with st.container(border=True, ):
+    with st.container(border=True ):
         st.image(data["cover"], width="stretch")
         st.subheader(data["judul_manhwa"])
         st.caption(data["genre"])
 
-status = st.selectbox("Status",options=opsi, width="stretch")
+status = st.selectbox("Status",options=opsi, index=opsi.index(data["status"]), width="stretch")
 
+chapter = None
 if status == "Sedang Dibaca":
-    st.session_state["chapter"] = st.number_input(label="Chapter terahkir dibaca", min_value=1)
+    chapter = st.number_input(label="Chapter terakhir dibaca", min_value=1)
 
 x1,x2 = st.columns(2)
 with x1:
     if st.button("Simpan", width="stretch", type="primary"):
-        if data["status"] == "Sedang Dibaca" and data["chapter_terakhir"] == st.session_state["chapter"]:
+        if data["status"] == "Sedang Dibaca" and data["chapter_terakhir"] == chapter:
             st.session_state["error"] = ("Chapter tidak boleh sama")
-        elif data["status"] == status:
+        elif data["status"] == status and data["status"] != "Sedang Dibaca":
             st.session_state["error"] = ("Pilih status yang lain")
-        elif status == "Sudah Dibaca":
-            data["chapter_terakhir"] = None
-            data["status"] = "Sudah Dibaca"
-        elif status == "Belum Dibaca":
-            data["chapter_terakhir"] = None
-            data["status"] = "Belum Dibaca"
-        elif status == "Sedang Dibaca":
-            data["chapter_terakhir"] = chapter
-            data["status"] = "Sedang Dibaca"
-        # st.session_state["id_edit"] = False
-
+        else:
+            (supabase.table("bookmark_user").update({"status": status, "chapter_terakhir": chapter}).eq("id_manhwa",data["id_manhwa"]).execute())
+            st.session_state["sukses"] = (f"Pergantian Status Manhwa {data["judul_manhwa"]} Berhasil!")
+            st.session_state["edit"] = False
+            st.rerun()
+        
 with x2:
     if st.button("Batal",width="stretch", type="secondary"):
         st.session_state["edit"] = False
-        st.session_state["id_edit"] = False
-        st.switch_page["pages/beranda/py"]
+        st.rerun()
 
-if st.session_state["error"] is not None:
-    st.error(st.session_state["error"])
+if st.session_state["error"]:
+    st.error(st.session_state.pop("error"))
