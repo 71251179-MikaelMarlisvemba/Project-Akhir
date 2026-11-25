@@ -128,6 +128,10 @@ for i, manhwa in enumerate(data_halaman):
                     supabase.table("bookmark_user").delete().eq("id_manhwa",manhwa["id_manhwa"]).execute()
                     st.rerun()
 
+isi_riwayat = st.session_state["riwayat_edit"]
+if data_halaman == []:
+    isi_riwayat.clear()
+
 if data_halaman != []:
     x1,x2,x3 = st.columns(3)
     with x1:
@@ -145,7 +149,6 @@ if data_halaman != []:
         tampil = []
         st.subheader("**Riwayat Edit**")
         st.caption("Perubahan status atau chapter terakhir")
-        isi_riwayat = st.session_state["riwayat_edit"]
         if len(isi_riwayat) == 6:
             isi_riwayat.pop(0)
         for i in isi_riwayat:
