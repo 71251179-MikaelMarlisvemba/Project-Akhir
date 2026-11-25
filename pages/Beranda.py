@@ -19,6 +19,8 @@ if "id_edit" not in st.session_state:
     st.session_state["id_edit"] = {}
 if "riwayat_edit" not in st.session_state:
     st.session_state["riwayat_edit"] = []
+if "rekomendasi" not in st.session_state:
+    st.session_state["rekomendasi"] = ""
 
 def ke_sebelumnya():
     st.session_state["beranda_now"] -= 1
@@ -177,6 +179,7 @@ if data_halaman != []:
     st.subheader("**Rekomendasi Manhwa**")
     st.caption("AI akan merekomendasikan 5 judul berdasarkan manhwa di bookmark Anda")
     if st.button("Rekomendasikan 5 Manhwa", type="primary", width="stretch"):
-
+        st.session_state["rekomendasi"] = rekomendasi(data_halaman)
+        
         with st.container(border=True):
-            st.write(rekomendasi(data_halaman))
+            st.write(st.session_state["rekomendasi"])

@@ -9,12 +9,7 @@ query(
     $genre: String,
     $page: Int
 ) {
-    Page(page: $page, perPage: 3) {
-        pageInfo {
-            currentPage
-            hasNextPage
-        }
-            
+    Page(page: $page, perPage: 50) {  
         media(
             search: $search,
             genre: $genre,
@@ -69,7 +64,7 @@ def cari_manhwa(search="", genre="Semua", page=1):
     result = response.json()
     
     if "errors" in result:
-        raise ValueError(result["erorrs"])
+        raise ValueError(result["errors"])
     
     return result["data"]["Page"]["media"]
     

@@ -9,7 +9,6 @@ st.header("Cari Manhwa")
 if "cari_manhwa" not in st.session_state:
     st.session_state.hasil_manhwa = []
     st.session_state.page_cari = 1
-    st.session_state.jumlah = 0
     st.session_state.cari = False
     
 cari = st.text_input("**Cari**", key="cari_manhwa",placeholder="Masukkan nama manhwa").strip()
@@ -42,12 +41,13 @@ data_manhwa = [item["judul_manhwa"] for item in data_user.data]
 genre = st.selectbox("**Filter Kategori**", options=genres)
 
 def muat_manhwa():
-    st.session_state.hasil_manhwa = cari_manhwa(
+    data = cari_manhwa(
             search=st.session_state.manhwa,
             genre=st.session_state.genre,
-            page=st.session_state.page_cari
         )
-
+    
+    st.session_state.hasil_manhwa = data
+    
 if st.button("**Cari**", type='primary', use_container_width=True):
     st.session_state.manhwa = cari
     st.session_state.genre = genre
@@ -55,9 +55,12 @@ if st.button("**Cari**", type='primary', use_container_width=True):
     st.session_state.cari = True
     muat_manhwa()
     
+perHalaman = 3
+hasilCari = st.session_state.hasil_manhwa
+mulai = (st.session_state.page_cari - 1) * perHalaman
+hasil = hasilCari[mulai:mulai + perHalaman]
+selanjutnya = mulai + perHalaman < len(hasilCari)
 
-hasil = st.session_state.hasil_manhwa
-st.session_state.jumlah = len(hasil)
     
 if len(hasil) == 0:
     if st.session_state.cari:
@@ -118,7 +121,7 @@ else:
                 
             col2.button(f"**Halaman {st.session_state.page_cari}**", use_container_width=True, type="tertiary", disabled=True)
                         
-            if col3.button("Selanjutnya", disabled=st.session_state.jumlah < 3, use_container_width=True):
+            if col3.button("Selanjutnya", disabled=not selanjutnya, use_container_width=True):
                 st.session_state.page_cari += 1
                 muat_manhwa()
                 st.rerun()
