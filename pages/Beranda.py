@@ -9,7 +9,7 @@ if "sukses" in st.session_state:
     st.success(st.session_state.pop("sukses"))
 
 opsi_status = ["Semua","Belum Dibaca", "Sedang Dibaca", "Selesai Dibaca"]
-opsi_sort = ["A-Z", "Z-A", "Terlama", "Terbaru"]
+opsi_sort = ["Terbaru", "Terlama", "A-Z", "Z-A"]
 
 data_manhwa = supabase.table("bookmark_user").select("*").eq("id_user",st.session_state["id_user"]).execute()
 
@@ -17,6 +17,8 @@ if "beranda_now" not in st.session_state:
     st.session_state["beranda_now"] = 1
 if "id_edit" not in st.session_state:
     st.session_state["id_edit"] = {}
+if "riwayat_edit" not in st.session_state:
+    st.session_state["riwayat_edit"] = []
 
 def ke_sebelumnya():
     st.session_state["beranda_now"] -= 1
@@ -103,7 +105,7 @@ total_halaman = max(1, math.ceil(len(data_filter)/total_manhwa_perhalaman))
 st.session_state["beranda_now"] = min(st.session_state["beranda_now"], total_halaman) # antisipasi delete
 
 awal = (st.session_state["beranda_now"] - 1) * total_manhwa_perhalaman
-data_halaman = data_filter[awal:awal + total_manhwa_perhalaman]
+data_halaman = data_filter[awal : awal + total_manhwa_perhalaman]
 
 kolom = st.columns(3)
 for i, manhwa in enumerate(data_halaman):
@@ -138,6 +140,11 @@ if data_halaman != []:
         st.button("Selanjutnya", disabled=st.session_state["beranda_now"] >= total_halaman, on_click=ke_selanjutnya, width="stretch")
 
     st.divider()
+
+    if st.session_state["riwayat_edit"] != []:
+        st.subheader("Riwayat Edit")
+        st.caption("Perubahan status atau chapter terahkir")
+        st.divider()
 
     st.subheader("Rekomendasi Manhwa")
     st.caption("AI akan merekomendasikan 5 judul berdasarkan manhwa di bookmark Anda")

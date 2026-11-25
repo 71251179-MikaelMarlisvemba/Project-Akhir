@@ -34,6 +34,12 @@ with x1:
         elif data["status"] == status and data["status"] != "Sedang Dibaca":
             st.session_state["error"] = ("Pilih status yang lain")
         else:
+            temp = {}
+            temp["Manhwa"] = data["judul_manhwa"]
+            temp["Sebelum"] = data["status"]
+            temp["Chapter_sebelum"] = data["chapter_terahkir"] 
+            temp["Sesudah"] = status
+            temp["Chapter_sesudah"] = chapter
             (supabase.table("bookmark_user").update({"status": status, "chapter_terakhir": chapter}).eq("id_manhwa",data["id_manhwa"]).execute())
             st.session_state["sukses"] = (f"Pergantian Status Manhwa {data["judul_manhwa"]} Berhasil!")
             st.session_state["edit"] = False
