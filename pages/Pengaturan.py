@@ -50,6 +50,7 @@ if st.button("Log Out", type="primary", width="stretch"):
     st.session_state["logged_in"] = False
     st.session_state["username"] = ""
     st.session_state["id_user"] = None
+    st.session_state["riwayat_edit"] = []
     st.rerun()
 
         
