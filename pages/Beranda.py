@@ -142,10 +142,35 @@ if data_halaman != []:
     st.divider()
 
     if st.session_state["riwayat_edit"] != []:
+        tampil = []
         st.subheader("Riwayat Edit")
-        st.caption("Perubahan status atau chapter terahkir")
+        st.caption("Perubahan status atau chapter terakhir")
+        isi_riwayat = st.session_state["riwayat_edit"]
+        if len(isi_riwayat) == 6:
+            isi_riwayat.pop(0)
+        for i in isi_riwayat:
+            temp = {}
+            temp["Manhwa"] = i["Manhwa"]
+            temp['Sebelum']= None
+            temp["Sesudah"]= None
+            if i["Sebelum_status"] == i["Sesudah_status"]:
+                temp["Sebelum"]= f"Sedang Dibaca, Chapter {i["Chapter_sebelum"]}"
+                temp["Sesudah"]= f"Sedang Dibaca, Chapter {i["Chapter_sesudah"]}"
+            elif i["Sebelum_status"] == "Sedang Dibaca":
+                temp["Sebelum"]= f"Sedang Dibaca, Chapter {i["Chapter_sebelum"]}"
+                temp["Sesudah"]= i["Sesudah_status"]
+            elif i["Sesudah_status"] == "Sedang Dibaca":
+                temp["Sebelum"]= i["Sebelum_status"]
+                temp["Sesudah"]= f"Sedang Dibaca, Chapter {i["Chapter_sesudah"]}"
+            else:
+                temp["Sebelum"] = i["Sebelum_status"]
+                temp["Sesudah"] = i["Sesudah_status"]
+    
+            tampil.append(temp)
+
+        st.dataframe(tampil)
         st.divider()
-        st.write(st.session_state["riwayat_edit"])
+
     st.subheader("Rekomendasi Manhwa")
     st.caption("AI akan merekomendasikan 5 judul berdasarkan manhwa di bookmark Anda")
     if st.button("Rekomendasikan 5 Manhwa", type="primary", width="stretch"):

@@ -36,9 +36,9 @@ with x1:
         else:
             temp = {}
             temp["Manhwa"] = data["judul_manhwa"]
-            temp["Sebelum"] = data["status"]
+            temp["Sebelum_status"] = data["status"]
             temp["Chapter_sebelum"] = data["chapter_terakhir"] 
-            temp["Sesudah"] = status
+            temp["Sesudah_status"] = status
             temp["Chapter_sesudah"] = chapter
             st.session_state["riwayat_edit"].append(temp)
             (supabase.table("bookmark_user").update({"status": status, "chapter_terakhir": chapter}).eq("id_manhwa",data["id_manhwa"]).execute())
