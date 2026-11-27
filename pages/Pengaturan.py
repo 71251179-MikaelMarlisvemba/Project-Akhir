@@ -73,7 +73,11 @@ with st.container(border=True):
     file_upload = st.file_uploader("Upload", type=["json"], accept_multiple_files=False, label_visibility="collapsed")
     
     if file_upload is not None:
-        data = json.load(file_upload)
+        try:
+            data = json.load(file_upload)
+        except Exception:
+            st.error("File bukan JSON yang valid.")
+            st.stop()
 
         res = supabase.table("bookmark_user").select("id_manhwa").eq("id_user", st.session_state["id_user"]).execute()
         existing_ids = [row["id_manhwa"] for row in res.data]
@@ -81,7 +85,6 @@ with st.container(border=True):
         for item in data:
             if isinstance(item, dict) and item.get("id_manhwa") not in existing_ids:
                 item["id_user"] = st.session_state["id_user"]
-                item.pop("id", None)
                 supabase.table("bookmark_user").insert(item).execute()
         st.success("Data berhasil diimpor!")
     else:
