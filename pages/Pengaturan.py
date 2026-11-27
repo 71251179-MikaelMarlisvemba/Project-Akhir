@@ -69,20 +69,23 @@ with st.container(border=True):
 
 with st.container(border=True):
     st.subheader("Import Data")
-    st.write("Pilh file backup (.json), maks 200 MB")
-    file_upload = st.file_uploader("Upload", type=["json"], accept_multiple_files=False,label_visibility="collapsed")
-    if file_upload is None:
-        st.caption("Belum ada file yang diunggah")
-   
-    else:
-
+    st.write("Pilih file backup (.json), maks 200 MB")
+    file_upload = st.file_uploader("Upload", type=["json"], accept_multiple_files=False, label_visibility="collapsed")
+    
+    if file_upload is not None:
         data = json.load(file_upload)
-        if isinstance(data, list):
-            for item in data:
-                supabase.table("bookmark_user").upsert(item).execute()
-            st.success("Data berhasil diimpor!")
-        else:
-            st.error("Format file tidak valid. Harap unggah file JSON yang sesuai.")
+
+        res = supabase.table("bookmark_user").select("id_manhwa").eq("id_user", st.session_state["id_user"]).execute()
+        existing_ids = [row["id_manhwa"] for row in res.data]
+
+        for item in data:
+            if isinstance(item, dict) and item.get("id_manhwa") not in existing_ids:
+                item["id_user"] = st.session_state["id_user"]
+                item.pop("id", None)
+                supabase.table("bookmark_user").insert(item).execute()
+        st.success("Data berhasil diimpor!")
+    else:
+        st.caption("Belum ada file yang diunggah")
 
 if st.button("Log Out", type="primary", width="stretch"):
     st.session_state["logged_in"] = False
