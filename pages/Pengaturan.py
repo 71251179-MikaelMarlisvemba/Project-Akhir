@@ -77,16 +77,17 @@ with st.container(border=True):
             data = json.load(file_upload)
         except Exception:
             st.error("File bukan JSON yang valid.")
-            st.stop()
+            data = None
 
-        res = supabase.table("bookmark_user").select("id_manhwa").eq("id_user", st.session_state["id_user"]).execute()
-        existing_ids = [row["id_manhwa"] for row in res.data]
-
-        for item in data:
-            if isinstance(item, dict) and item.get("id_manhwa") not in existing_ids:
-                item["id_user"] = st.session_state["id_user"]
-                supabase.table("bookmark_user").insert(item).execute()
-        st.success("Data berhasil diimpor!")
+        if data is not None:
+            res = supabase.table("bookmark_user").select("id_manhwa").eq("id_user", st.session_state["id_user"]).execute()
+            existing_ids = [row["id_manhwa"] for row in res.data]
+    
+            for item in data:
+                if isinstance(item, dict) and item.get("id_manhwa") not in existing_ids:
+                    item["id_user"] = st.session_state["id_user"]
+                    supabase.table("bookmark_user").insert(item).execute()
+            st.success("Data berhasil diimpor!")
     else:
         st.caption("Belum ada file yang diunggah")
 
