@@ -1,6 +1,7 @@
+import io
 import streamlit as st
 import json 
-import csv
+import xlsxwriter as xlsx 
 from db import supabase
 
 st.title("Pengaturan")
@@ -35,9 +36,36 @@ with st.container(border=True):
     st.write("Unduh koleksi manhwa Anda")
     col1, col2 = st.columns([1, 1])
     with col1:
-        tombol_json =st.button("Export JSON", type='secondary', use_container_width= True)
+
+        file_json= supabase.table("bookmark_user").select("*").eq("id_user", st.session_state["id_user"]).execute()
+        data_json = file_json.data
+        json_data = json.dumps(data_json, indent=4)
+        st.download_button(
+            label="Export JSON",
+            data=json_data,
+            file_name="backup_manhwa.json",
+            mime="application/json",
+            use_container_width=True
+        )
     with col2:
-        tombol_excel = st.button("Export Excel", type='secondary', use_container_width= True)
+        output = io.BytesIO()
+        workbook = xlsx.Workbook(output, {'in_memory': True})
+        worksheet = workbook.add_worksheet("Backup Manhwa")
+        headers = ["id_user", "id_manhwa", "judul_manhwa", "cover", "genre", "status", "chapter_terakhir"]
+        for kolom, header in enumerate(headers):
+            worksheet.write(0, kolom, header)
+        for baris, data in enumerate(data_json, start=1):
+            for kolom, header in enumerate(headers):
+                worksheet.write(baris, kolom, data.get(header))
+        workbook.close()
+        output.seek(0)
+        st.download_button(
+            label="Export Excel",
+            data=output,
+            file_name="backup_manhwa.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            use_container_width=True
+        )
 
 with st.container(border=True):
     st.subheader("Import Data")
@@ -45,6 +73,16 @@ with st.container(border=True):
     file_upload = st.file_uploader("Upload", type=["json"], accept_multiple_files=False,label_visibility="collapsed")
     if file_upload is None:
         st.caption("Belum ada file yang diunggah")
+   
+    else:
+
+        data = json.load(file_upload)
+        if isinstance(data, list):
+            for item in data:
+                supabase.table("bookmark_user").upsert(item).execute()
+            st.success("Data berhasil diimpor!")
+        else:
+            st.error("Format file tidak valid. Harap unggah file JSON yang sesuai.")
 
 if st.button("Log Out", type="primary", width="stretch"):
     st.session_state["logged_in"] = False
